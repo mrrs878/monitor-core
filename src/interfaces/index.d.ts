@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2020-12-11 19:20:05
- * @LastEditTime: 2020-12-11 19:20:15
+ * @LastEditTime: 2020-12-12 12:02:32
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \monitor-core\src\interfaces\index.d.ts

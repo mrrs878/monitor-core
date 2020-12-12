@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2020-12-11 19:28:45
- * @LastEditTime: 2020-12-12 10:38:52
+ * @LastEditTime: 2020-12-12 11:44:46
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \monitor-core\.eslintrc.js
@@ -15,7 +15,7 @@ module.exports = {
   extends: [
     'airbnb-typescript'
   ],
-  plugins: ['@typescript-eslint'],
+  plugins: ['@typescript-eslint', 'react-hooks'],
   parserOptions: {
     project: './tsconfig.json',
     ecmaVersion: 11

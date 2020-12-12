@@ -1,44 +1,20 @@
 /*
- * @Author: your name
- * @Date: 2020-12-11 19:10:15
- * @LastEditTime: 2020-12-11 19:19:46
+* @Author: mrrs878
+* @Date: 2020-12-11 19:10:15
+ * @LastEditTime: 2020-12-12 16:14:45
  * @LastEditors: Please set LastEditors
- * @Description: In User Settings Edit
- * @FilePath: \monitor-core\src\index.js
- */
-const config: ConfigI = { reportUrl: '/' };
+* @Description: In User Settings Edit
+* @FilePath: \monitor-core\src\index.js
+*/
+import {
+  getCommonInfoFromEvent, getLastEvent, getLines, getSelector,
+} from './tool';
 
-function getLastEvent(): undefined | Event {
-  let lastEvent;
-  ['click', 'touchstart', 'mousedown', 'keydown', 'mouseover'].forEach((eventType) => document.addEventListener(eventType, (event) => {
-    lastEvent = event;
-  }, {
-    capture: true,
-    passive: true,
-  }));
-  return lastEvent;
-}
-
-function getSelector(path: Array<EventTarget>) {
-  return '';
-}
+const config = { reportUrl: '/' };
 
 function report<T>(data: { type: 'JSRunTimeErrorI' | 'PromiseErrorT' | 'AssetsErrorI' | 'AjaxErrorEventI'; info: T }) {
   const image = new Image();
   image.src = `${config.reportUrl}?error=${JSON.stringify(data.info)}`;
-}
-
-function getCommonInfoFromEvent(event?: Event) {
-  return {
-    title: document.title.replace(/&/, ''),
-    location: window.location.href.replace(/&/, ''),
-    kind: 'stability',
-    type: 'error',
-  };
-}
-
-function getLines(stack: string | undefined) {
-  return stack?.split('\n').slice(1).map((item) => item.replace(/^\s+at\s+/g, '')).join('') || '';
 }
 
 // Promise异常
@@ -54,7 +30,12 @@ function promiseError() {
       stack = getLines(reason.stack);
     }
 
-    report<PromiseErrorI>({ type: 'PromiseErrorT', info: { errorType: event.type, message, stack, ...getCommonInfoFromEvent() } });
+    report<PromiseErrorI>({
+      type: 'PromiseErrorT',
+      info: {
+        errorType: event.type, message, stack, ...getCommonInfoFromEvent(),
+      },
+    });
     return true;
   }, true);
 }
@@ -66,14 +47,18 @@ function assetsError() {
     console.log(event);
     const isElementTarget = target instanceof HTMLScriptElement || target instanceof HTMLLinkElement || target instanceof HTMLImageElement;
     if (!isElementTarget) {
-      const { message, filename, lineno, colno, error, type } = event;
+      const {
+        message, filename, lineno, colno, error, type,
+      } = event;
       const position = `${lineno}:${colno}`;
       const stack = getLines(error instanceof Error ? error.stack : '');
       const lastEvent = getLastEvent();
       const selector = lastEvent ? getSelector(lastEvent.composedPath()) : '';
       report<JSRunTimeErrorEventI>({
         type: 'JSRunTimeErrorI',
-        info: { ...getCommonInfoFromEvent(), message, errorType: type, filename, position, stack, selector },
+        info: {
+          ...getCommonInfoFromEvent(), message, errorType: type, filename, position, stack, selector,
+        },
       });
     } else {
       let url = '';
@@ -87,13 +72,16 @@ function assetsError() {
         nodeName = target.nodeName;
       }
 
-      report<AssetsErrorI>({ type: 'AssetsErrorI',
+      report<AssetsErrorI>({
+        type: 'AssetsErrorI',
         info: {
           url,
           errorType: event.type,
           nodeName,
           message: '',
-          ...getCommonInfoFromEvent() } });
+          ...getCommonInfoFromEvent(),
+        },
+      });
     }
     return true;
   }, true);
@@ -132,13 +120,13 @@ function ajaxError() {
       console.log(`Tool's error: ${e}`);
     }
   }
-  xmlReq.prototype.send = function (...args) {
+  xmlReq.prototype.send = function send(...args) {
     this.addEventListener('error', handleEvent);
     this.addEventListener('load', handleEvent);
     this.addEventListener('abort', handleEvent);
     return oldSend.apply(this, args);
   };
-  xmlReq.prototype.open = function (...args: any) {
+  xmlReq.prototype.open = function open(...args: any) {
     const [method, url] = args;
     Object.assign(oldArgs, { method, url });
     oldOpen.apply(this, args);
