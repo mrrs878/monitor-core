@@ -2,14 +2,22 @@
   "name": "@mrrs878/monitor-core",
   "version": "0.0.1",
   "description": "",
-  "main": "dist/index.js",
+  "main": "dist/esm/index.js",
   "scripts": {
     "test": "jest",
     "build": "rollup -c"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mrrs878/monitor-core"
+  },
   "keywords": [],
   "author": "mrrs",
-  "license": "ISC",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/mrrs878/monitor-core/issues"
+  },
+  "homepage": "https://github.com/mrrs878/monitor-core#readme",
   "devDependencies": {
     "@babel/core": "^7.12.10",
     "@babel/plugin-transform-runtime": "^7.12.10",
